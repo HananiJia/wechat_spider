@@ -5,6 +5,8 @@
         "appmsg_token" : "1053_b4r%2B%2FZI69esVhynGWI5rk5JKfrwMUoMmbdxmf6TM-J3LDaAXj-SLi-Rs3VrrowYVI2u502pOf4Xf0ECv",
         "wechat_cookie" : "rewardsn=; wxtokenkey=777; wxuin=1571052916; devicetype=Windows10; version=62080079; lang=zh_CN; pass_ticket=DQjCGEzvqpriOSW8W1/h+yZUrW2i7pix+cBfM1DniEJE4UEImBC0CLG5E77Jw9ri; wap_sid2=CPS6ke0FElx3ZXc1N1o4c3BzdmVrM2xrNHNFQTM1U3ZTYlhEMURabks0OGd4dkRDLVl4OGtVdDV2LW5MM0U0UUY4Q2VrMU1GZ3BueWxzc2ozMkxxODd5b3Uyc1g5UjBFQUFBfjCegtbzBTgNQAE=",
         "nickname" : "西安工业大学图书馆"
-    }
-
+    },
+    "images_path" : "/home/hanani/code/personal/wechat_spider/articles_md/images/{}",
+    "articles_path" : "/home/hanani/code/personal/wechat_spider/articles_md/{}",
+    "url_list" :[["https://mp.weixin.qq.com/s/3Xqrn52jObN-M524Jld1yw"],["https://mp.weixin.qq.com/s?__biz=MjM5ODA3MTg0MA==&mid=2704191300&idx=1&sn=a07858158bf2d23d4209e406a4532779&chksm=820a540bb57ddd1da1271dd5d1d5f67ee8aa58277fdda414f919fc4056c5ce3c628cb2c6630d&mpshare=1&scene=1&srcid=&sharer_sharetime=1589014830896&sharer_shareid=c7504e70e4ef5c73a2648f062f06440f&rd2werd=1#wechat_redirect"]]
 }

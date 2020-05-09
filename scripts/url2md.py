@@ -4,20 +4,18 @@ from pathlib import Path
 from bs4 import BeautifulSoup as bs
 from bs4.element import NavigableString
 import re
+import json
 
-path = '/home/hanani/code/personal/wechat_spider/scripts/{}'
+images_path = ''
+articles_path = ''
+config_path = '/home/hanani/code/personal/wechat_spider/config.json'
 parse_lst = ['article', 'a']
 str_lst = ['hr', 'span', 'ul']
-
-
-def extract_text(p):
-    pass
-
 
 def download_img(url, name):
     response = requests.get(url)
     img = response.content
-    imgpath = path.format(name)
+    imgpath = images_path.format(name)
     with open(imgpath, 'wb') as f:
         f.write(img)
 
@@ -63,54 +61,60 @@ def parse_section(sections):
 
     return content
 
+if __name__ == '__main__':
+    url_list = []
+    with open(config_path,"r") as config:
+        config_dict = json.load(config)
+        images_path = config_dict['images_path']
+        articles_path = config_dict['articles_path']
+        url_list = config_dict['url_list']
+    for url_lst in url_list:       
+        for url in url_lst[::-1]:
+            html = requests.get(url)
+            soup = bs(html.text, 'lxml')
+            # try:
+            body = soup.find(class_="rich_media_area_primary_inner")
+            title = body.find(class_="rich_media_title").text.strip()
+            author = body.find(
+                class_="rich_media_meta rich_media_meta_nickname").a.text.strip()
+            content_p = body.find(class_="rich_media_content")
+            content_lst = content_p.contents
 
-url_lst = ['https://mp.weixin.qq.com/s/3Xqrn52jObN-M524Jld1yw']
-with open('t.md', 'w', encoding='utf-8') as f:
-    for url in url_lst[::-1]:
-        html = requests.get(url)
-        soup = bs(html.text, 'lxml')
-        # try:
-        body = soup.find(class_="rich_media_area_primary_inner")
-        title = body.find(class_="rich_media_title").text.strip()
-        author = body.find(
-            class_="rich_media_meta rich_media_meta_nickname").a.text.strip()
-        content_p = body.find(class_="rich_media_content")
-        content_lst = content_p.contents
+            content = ''
 
-        content = ''
-
-        for item in content_lst:
-            if item.name == None:
-                content += item
-            elif item.name == 'section':
-                section_str = str(item)
-                for img in item.find_all('img'):
-                    section_str = section_str.replace(
-                        str(img), '\n\n![img]({})\n\n'.format(img['data-src']))
-                content += section_str
-            elif item.name in str_lst:
-                content += str(item)
-            elif item.name == 'p':
-                tmp = ''.join(str(content) for content in item.contents)
-                content += tmp
-            elif item.name in parse_lst:
-                content += parse_section(item.contents)
-            elif item.name == 'br':
-                content += '</br>'
-            elif item.name == 'strong':
-                content += '<strong>{}</strong>'.format(item.string)
-            elif item.name == 'iframe':
-                content += 'iframe\n'
-            elif section.name == 'img':
-                url = section['data-src']
-                content += '![img]({})\n'.format(url)
-            else:
-                print(item.name)
-
-        f.write('## ' + title + '\n')
-        f.write(author + '\n')
-        f.write(content + '\n')
-        f.write('<div style="page-break-after: always;"></div>\n')
-        # except:
-        #     print(url)
-        #     pass
+            for item in content_lst:
+                if item.name == None:
+                    content += item
+                elif item.name == 'section':
+                    section_str = str(item)
+                    for img in item.find_all('img'):
+                        section_str = section_str.replace(
+                            str(img), '\n\n![img]({})\n\n'.format(img['data-src']))
+                    content += section_str
+                elif item.name in str_lst:
+                    content += str(item)
+                elif item.name == 'p':
+                    tmp = ''.join(str(content) for content in item.contents)
+                    content += tmp
+                elif item.name in parse_lst:
+                    content += parse_section(item.contents)
+                elif item.name == 'br':
+                    content += '</br>'
+                elif item.name == 'strong':
+                    content += '<strong>{}</strong>'.format(item.string)
+                elif item.name == 'iframe':
+                    content += 'iframe\n'
+                elif section.name == 'img':
+                    url = section['data-src']
+                    content += '![img]({})\n'.format(url)
+                else:
+                    print(item.name)
+            md_path = articles_path.format(f'{title}.md')        
+            with open(md_path, 'w+', encoding='utf-8') as f:
+                f.write('## ' + title + '\n')
+                f.write(author + '\n')
+                f.write(content + '\n')
+                f.write('<div style="page-break-after: always;"></div>\n')
+                # except:
+                #     print(url)
+                #     pass
