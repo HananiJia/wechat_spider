@@ -323,7 +323,7 @@ class ArticlesUrls(object):
         Parameters
         ----------
         begin: str or int
-            起始爬取的页数
+ 起始爬取的页数
         count: str or int
             每次爬取的数量，1-5
 
