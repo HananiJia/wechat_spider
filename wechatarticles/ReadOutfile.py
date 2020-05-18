@@ -15,7 +15,6 @@ class Reader:
     运行mitmproxy，并筛选cookie和appmsg_token， 这里的编码是二进制编码，所以需要decode
     command: python get_params outfile
     """
-
     def __init__(self):
         """
         不需要额外的参数
@@ -123,8 +122,10 @@ class Reader:
             appmsg_token, cookie：需要的参数
         """
         path = os.path.split(os.path.realpath(__file__))[0]
-        command = "mitmdump -qs {}/ReadOutfile.py {} mp.weixin.qq.com/mp/getappmsgext".format(path, outfile)
+        command = "mitmdump -qs {}/ReadOutfile.py {} mp.weixin.qq.com/mp/getappmsgext".format(
+            path, outfile)
         os.system(command)
+
 
 def response(flow):
     """
@@ -147,4 +148,3 @@ def response(flow):
         w.add(flow)
         f.close()
         exit()
-

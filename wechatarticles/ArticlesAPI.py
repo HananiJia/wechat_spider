@@ -4,17 +4,20 @@ from .ArticlesUrls import ArticlesUrls
 from .ArticlesInfo import ArticlesInfo
 import time
 import requests
+import codecs, markdown
+from tqdm import tqdm
 from pathlib import Path
 from bs4 import BeautifulSoup as bs
 from bs4.element import NavigableString
 import re
 import json
+import pymongo
+
 
 class ArticlesAPI(object):
     """
     整合ArticlesInfo和ArticlesInfo, 方便调用
     """
-
     def __init__(self,
                  username=None,
                  password=None,
@@ -66,14 +69,14 @@ class ArticlesAPI(object):
 
         self.wechat = ArticlesInfo(self.appmsg_token, self.cookie)
 
-    def download_img(self,url, name,images_path):
+    def download_img(self, url, name, images_path):
         response = requests.get(url)
         img = response.content
         imgpath = images_path.format(name)
         with open(imgpath, 'wb') as f:
             f.write(img)
 
-    def parse_section(self,sections,str_lst,parse_lst):
+    def parse_section(self, sections, str_lst, parse_lst):
         content = ''
         global section
         for section in sections:
@@ -92,7 +95,8 @@ class ArticlesAPI(object):
                 tmp = ''.join(str(content) for content in section.contents)
                 content += tmp
             elif section.name in parse_lst:
-                content += self.parse_section(section.contents,str_lst,parse_lst)
+                content += self.parse_section(section.contents, str_lst,
+                                              parse_lst)
             elif section.name == 'img':
                 url = section['data-src']
                 """
@@ -100,7 +104,7 @@ class ArticlesAPI(object):
                 download_img(url, name)
                 content += '![{}]({})\n'.format(name, path.format(name))
                 """
-                content += '![img]({})\n'.format(url)
+                # content += '![img]({})\n'.format(url)
                 # content += str(section)
             elif section.name == 'br':
                 content += '</br>'
@@ -113,22 +117,24 @@ class ArticlesAPI(object):
                 # print(section)
 
         return content
-    
-    def loading_url(self,url_lst,articles_path): 
-        print("link:",url_lst) 
+
+    def loading_url(self, url_lst, md_path, html_path):
         parse_lst = ['article', 'a']
-        str_lst = ['hr', 'span', 'ul']   
+        str_lst = ['hr', 'span', 'ul']
         for url in url_lst[::-1]:
             html = requests.get(url)
             soup = bs(html.text, 'lxml')
             # try:
             body = soup.find(class_="rich_media_area_primary_inner")
+            if not body:
+                continue
             titles = body.find(class_="rich_media_title")
             if not titles:
                 continue
             title = titles.text.strip()
             author = body.find(
-                class_="rich_media_meta rich_media_meta_nickname").a.text.strip()
+                class_="rich_media_meta rich_media_meta_nickname"
+            ).a.text.strip()
             content_p = body.find(class_="rich_media_content")
             content_lst = content_p.contents
 
@@ -141,7 +147,8 @@ class ArticlesAPI(object):
                     section_str = str(item)
                     for img in item.find_all('img'):
                         section_str = section_str.replace(
-                            str(img), '\n\n![img]({})\n\n'.format(img['data-src']))
+                            str(img),
+                            '\n\n![img]({})\n\n'.format(img['data-src']))
                     content += section_str
                 elif item.name in str_lst:
                     content += str(item)
@@ -149,21 +156,26 @@ class ArticlesAPI(object):
                     tmp = ''.join(str(content) for content in item.contents)
                     content += tmp
                 elif item.name in parse_lst:
-                    content += self.parse_section(item.contents,str_lst,parse_lst)
+                    content += self.parse_section(item.contents, str_lst,
+                                                  parse_lst)
                 elif item.name == 'br':
                     content += '</br>'
                 elif item.name == 'strong':
                     content += '<strong>{}</strong>'.format(item.string)
                 elif item.name == 'iframe':
                     content += 'iframe\n'
-                elif section.name == 'img':
-                    url = section['data-src']
-                    content += '![img]({})\n'.format(url)
+                elif item.name == 'img':
+                    pass
+                    # url = section['data-src']
+                    # content += '![img]({})\n'.format(url)
                 else:
                     print(item.name)
-            md_path = articles_path.format(f'{title}.md')
-            print(f'loading {title}')        
-            with open(md_path, 'w+', encoding='utf-8') as f:
+            print('markdown_path:', md_path)
+            m_path = f'{md_path}/{title}.md'
+            print(f'转换文章标题: {title}')
+            print('写入Markdown文件')
+            time.sleep(1)
+            with open(m_path, 'w+', encoding='utf-8') as f:
                 f.write('## ' + title + '\n')
                 f.write(author + '\n')
                 f.write(content + '\n')
@@ -171,7 +183,14 @@ class ArticlesAPI(object):
                 # except:
                 #     print(url)
                 #     pass
-
+            print('写HTML文件')
+            time.sleep(1)
+            ht_path = f'{html_path}/{title}.html'
+            input_file = codecs.open(m_path, mode="r", encoding='utf-8')
+            text = input_file.read()
+            html = markdown.markdown(text)
+            output_file = codecs.open(ht_path, mode='w', encoding='utf-8')
+            output_file.write(html)
 
     def complete_info(self, nickname, begin=0, count=5):
         """
@@ -240,17 +259,18 @@ class ArticlesAPI(object):
         如果list为空则说明没有相关文章
         """
         # 获取文章数据
-        artiacle_data = self.officical.articles(
-            nickname, begin=str(begin), count=str(count))
+        artiacle_data = self.officical.articles(nickname,
+                                                begin=str(begin),
+                                                count=str(count))
 
         # 提取每个文章的url，获取文章的点赞、阅读、评论信息，并加入到原来的json中
-        print("artiacle_data:",artiacle_data)
+        print("artiacle_data:", artiacle_data)
         for data in artiacle_data:
             article_url = data["link"]
             comments = self.wechat.comments(article_url)
             #read_like_nums = self.wechat.read_like_nums(article_url)
             data["comments"] = comments
-            data["read_num"], data["like_num"] = 0,0
+            data["read_num"], data["like_num"] = 0, 0
 
         return artiacle_data
 
@@ -261,11 +281,17 @@ class ArticlesAPI(object):
             comments = self.wechat.comments(article_url)
             #read_like_nums = self.wechat.read_like_nums(article_url)
             data["comments"] = comments
-            data["read_num"], data["like_num"] = 0 , 0
+            data["read_num"], data["like_num"] = 0, 0
 
         return articles_data
 
-    def continue_info(self, nickname, begin = 0,articles_path=''):
+    def continue_info(self,
+                      nickname,
+                      begin=0,
+                      md_path='',
+                      html_path='',
+                      gap_time=10,
+                      articles_nums = 100):
         """
         自动获取公众号的抓取的文章文章信息，直到爬取失败为止
         Parameters
@@ -331,17 +357,41 @@ class ArticlesAPI(object):
         """
         artiacle_datas = []
         count = 5
+        start = 1
+        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        mydb = myclient['wechat']
+        mycol = mydb[nickname]
         while True:
             # 获取文章数据
-            print(f'正在抓取第{begin}篇到第{begin + count}篇文章数据')
-            artiacle_data = self.officical.articles(nickname, begin=str(begin), count=str(count))
-            print("article_data:",len(artiacle_data))
-            for artiacle in artiacle_data:
-                url_lst = [artiacle['link']]
-                self.loading_url(url_lst,articles_path)
+            print(f'正在自第{start}篇抓取数据')
+            artiacle_data = self.officical.articles(nickname,
+                                                    begin=str(begin),
+                                                    count=str(count))
+            if not artiacle_data:
+                print('数据抓取失败,终止抓取')
+                break
+            print(f'本次抓取{len(artiacle_data)}篇数据')
+            index = 0
             artiacle_datas.extend(artiacle_data)
+            for artiacle in artiacle_data:
+                if start + index >= articles_nums:
+                    print("已抓取到对应数据数据:",articles_nums)
+                    break
+                print(f'正在抓取第{start+index}篇文章数据')
+                index += 1
+                if not artiacle:
+                    print("article is None")
+                print(json.dumps(artiacle,indent=4,ensure_ascii=False))
+                time.sleep(gap_time)
+                url_lst = [artiacle['link']]
+                self.loading_url(url_lst, md_path, html_path)
+                mycol.insert_one(artiacle) 
+                del artiacle['_id'] 
             begin += count
+            start += len(artiacle_data)
+            if start >= articles_nums:
+                break
 
-        flatten = lambda x: [y for l in x for y in flatten(l)] if type(x) is list else [x]
-        print("第{}篇文章爬取失败，请过段时间再次尝试或换个帐号继续爬取".format(begin))
+        flatten = lambda x: [y for l in x
+                             for y in flatten(l)] if type(x) is list else [x]
         return self.__extract_info(flatten(artiacle_datas))

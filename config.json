@@ -1,13 +1,16 @@
 {
     "config" :{
-        "official_cookie" : "pgv_pvi=6862135296; pgv_pvid=5631861920; RK=lN59NNwjW3; ptcz=3be029560dda63b86f17528074d1caf7e91e12c612599ff538b6c14237d7a08e; _ga=GA1.2.769543912.1585722379; eas_sid=41Y5t8x8p384T2k5I708v9E021; LW_uid=x1D5h8N8g3Z4S4O8b2f7j8J510; ptui_loginuin=742832731; uin_cookie=o0742832731; ied_qq=o0742832731; LW_sid=t1u5W8c8N3P9n7g0C5f2p7A3W9; ua_id=aR2H6Crq4GnDq5GXAAAAABvUXdaVkxgw0E9KrmTK6Yw=; pgv_si=s8548596736; uuid=cb9abe658a8c12ae1f4cceb817b971a0; rand_info=CAESIEtMdxA+w4Sx4SW/Q9f5gI7oGQHSaXg4WzuE8R5FigO+; slave_bizuin=3086336939; data_bizuin=3086336939; bizuin=3086336939; data_ticket=2pxNZC914DdR9FDkY30AHJ4yZxJDVJEoEj1KsoqSTgo3KS4YZLHjqZyVUPNh6Did; slave_sid=akZqT25ma3M1OGNvV19INHYxSEtPY1hEWFpCUUNKZFplbmdUTHpoNWJPVm42RUVoSzR2YWV3TzdzazNSbUNIMFlYWGMwMXBNUTZ5NUpQbFI4ak9INHFwXzFUSnZ6SElTYUhGZXIxUTlWbndJZUhQRWtwalBRbjdnQ0tRV0VZam1yaWY1VlUyUHhKWmVuQVF6; slave_user=gh_b74b90425603; xid=eca0a7dfb024a8a448a0b80aeb948821; openid2ticket_oq8P1t9h_lQR6RPKcNMaVCkp0CDg=tqTBLiQNu2GpicYgGLIIZ/XkFQAkPjaIlwHmX/Rd4K0=; mm_lang=zh_CN",
-        "token" : "1713510816",
-        "appmsg_token" : "1061_yQLWDHe%2BKXCbahGFXdqhQXQ1GCDMr4xE7jQieVCgRWZIdZQqQR4F3MNzKiArAteSLt4jkM8TvjsvHP_m",
-        "wechat_cookie" : "rewardsn=wxtokenkey=777wxuin=1571052916devicetype=Windows10version=62090045lang=zh_CNpass_ticket=YFHaA7V+dItti2kCoLxy0A9B1noGojvkTUt1uuZfa8rK+E9J9Hu6mkCqg/NzxUC0wap_sid2=CPS6ke0FElxxaUVCM2tYN0ZmN1EwLUxVNm0xT25BM3lTNUFoMGoxZEFlcW12MmJjb3JfbUpZQkNJN2JfQXpBN0ttbzRXNm5FUlZIWXZqRHJBRzUwOGxJUFFsSkd2eVVFQUFBfjDzxPn1BTgNQAE=",
-        "nickname" : "西安工业大学"
+        "official_cookie" : "pgv_pvi=6862135296; pgv_pvid=5631861920; RK=lN59NNwjW3; ptcz=3be029560dda63b86f17528074d1caf7e91e12c612599ff538b6c14237d7a08e; _ga=GA1.2.769543912.1585722379; eas_sid=41Y5t8x8p384T2k5I708v9E021; LW_uid=x1D5h8N8g3Z4S4O8b2f7j8J510; ptui_loginuin=742832731; uin_cookie=o0742832731; ied_qq=o0742832731; LW_sid=t1u5W8c8N3P9n7g0C5f2p7A3W9; ua_id=aR2H6Crq4GnDq5GXAAAAABvUXdaVkxgw0E9KrmTK6Yw=; mm_lang=zh_CN; openid2ticket_oq8P1t9h_lQR6RPKcNMaVCkp0CDg=d7eHToccS4MsJ4D2ilFUIvwSliDrmdVpYLuk7qeiP2I=; openid2ticket_oDpOh0-qm9vXfqVYepyhQQAvHMy0=Vs8jxcwjL0pbr4nlDjVjyoJ5SPZkmtf5bbGoZ/q56uo=; pgv_si=s6996952064; uuid=6f20b24933ddbe07f207286c42666163; rand_info=CAESIJYtT8cKmzuT9yTtQT1ncoMPoRscQoNoQY7dIcCqUM+d; slave_bizuin=3550581518; data_bizuin=3550581518; bizuin=3550581518; data_ticket=Ds1uAnkOcBeXztXrYJsgIBldUD13w1LxXzFFRArnosM9QQ99xdBVW8iwnwkUQ1Jc; slave_sid=dTRkdUR3d3hFR0dXbzhiaFNSTlN0QXRJX2lGeHVxRHFaZVVuTTJEcVNQSVdXaV9wb2ZIdm9hNVZCTTQ2aDdZQjRZM3lPMjBrY3h3Q2J6TGVZUnd1WjVKQjJ2R2tGbkxQd2c2dVpvWFJGQXl2cnhWRW1keTNMakxLWWdUbWR3OU9BTzRBeUdneFZUTmhaZU8z; slave_user=gh_d5066ded1d72; xid=9c13cb942d95c1576b22965808838be2",
+        "token" : "1575020408",
+        "appmsg_token" : "1061_qPGAG5EgtU2MGlaAriMSPgchyGkSujQypScTHgtunPyTORtVRAfQWBwCbLvu8pljKoC0wGEQaopiAJs9",
+        "wechat_cookie" : "rewardsn=wxtokenkey=777wxuin=1571052916devicetype=Windows10x64version=62090070lang=zh_CNpass_ticket=isVEGV4A7cu0z8W7KeRfND7/CVe505Dz6dZ6cADjJPdYVqr1rrzEvjkyYWwbGX/Ywap_sid2=CPS6ke0FElxjWEVDRjM0Mkd1YlBudjNsS0dKSjBpTWhsTURacDRxNUMtc19hQVNfNTZhRGtEVDdIbmE1eWs0R0NVRVEyWWs5NDlJeUFhVVpCUkNMYVM2LUtFLWVNQ1VFQUFBfjD404r2BTgNQAE=",
+        "nickname" : "西安工业大学图书馆"
     },
+    "gap_time": 5,
+    "article_nums" : 2,
     "data_path":"/home/hanani/code/personal/wechat_spider/data",
     "images_path" : "/home/hanani/code/personal/wechat_spider/articles_md/images/{}",
-    "articles_path" : "/home/hanani/code/personal/wechat_spider/articles_md/{}",
+    "md_path" : "/home/hanani/code/personal/wechat_spider/articles_md/",
+    "html_path" : "/home/hanani/code/personal/wechat_spider/articles_html/",
     "url_list" :[["http://mp.weixin.qq.com/s?__biz=MzIxNzAyMDI5Ng==&mid=2651172614&idx=1&sn=2d6218fbe39249a1b3939e2db2afeb6f&chksm=8c712de1bb06a4f77aced1d4aa569528a6c1ddf58fb1f6f3782877b2ca474c23663b0172a444#rd"]]
 }

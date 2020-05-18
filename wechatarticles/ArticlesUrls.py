@@ -1,6 +1,7 @@
 # coding:  utf-8
 import hashlib
 import os
+import json
 
 import requests
 from requests.cookies import cookielib
@@ -10,7 +11,6 @@ class ArticlesUrls(object):
     """
     获取需要爬取的微信公众号的推文链接
     """
-
     def __init__(self, username=None, password=None, cookie=None, token=None):
         """
         初始化参数
@@ -120,10 +120,9 @@ class ArticlesUrls(object):
              for c in self.s.cookies}, new_cookie_jar)
 
         #保存到本地文件
-        new_cookie_jar.save(
-            'cookies/' + username + '.txt',
-            ignore_discard=True,
-            ignore_expires=True)
+        new_cookie_jar.save('cookies/' + username + '.txt',
+                            ignore_discard=True,
+                            ignore_expires=True)
 
     def __read_cookie(self, username):
         """
@@ -140,10 +139,9 @@ class ArticlesUrls(object):
         #实例化一个LWPCookieJar对象
         load_cookiejar = cookielib.LWPCookieJar()
         #从文件中加载cookies(LWP格式)
-        load_cookiejar.load(
-            'cookies/' + username + '.txt',
-            ignore_discard=True,
-            ignore_expires=True)
+        load_cookiejar.load('cookies/' + username + '.txt',
+                            ignore_discard=True,
+                            ignore_expires=True)
         #工具方法转换成字典
         load_cookies = requests.utils.dict_from_cookiejar(load_cookiejar)
         #工具方法将字典转换成RequestsCookieJar，赋值给session的cookies.
@@ -293,8 +291,10 @@ class ArticlesUrls(object):
 
         try:
             # 返回与输入公众号名称最接近的公众号信息
-            official = self.s.get(
-                search_url, headers=self.headers, params=self.params)
+            official = self.s.get(search_url,
+                                  headers=self.headers,
+                                  params=self.params)
+            print(json.dumps(official.json(),indent=4,ensure_ascii=False))
             return official.json()["list"][0]
         except Exception:
             raise Exception(u"公众号名称错误或cookie、token错误，请重新输入")
@@ -345,11 +345,13 @@ class ArticlesUrls(object):
         如果list为空则说明没有相关文章
         """
         self.__verify_str(nickname, "nickname")
+        print(f'公众号文章昵称正常可抓取{nickname}')
         try:
-            return self.__get_articles_data(
-                nickname, begin=str(begin), count=str(count))["app_msg_list"]
+            return self.__get_articles_data(nickname,
+                                            begin=str(begin),
+                                            count=str(count))["app_msg_list"]
         except Exception:
-            raise Exception(u"公众号名称错误或cookie、token错误，请重新输入")
+            return None
 
     def query_articles_nums(self, nickname, query):
         """
@@ -365,8 +367,9 @@ class ArticlesUrls(object):
         """
         self.__verify_str(query, "query")
         try:
-            return self.__get_articles_data(
-                nickname=nickname, begin="0", query=query)["app_msg_cnt"]
+            return self.__get_articles_data(nickname=nickname,
+                                            begin="0",
+                                            query=query)["app_msg_cnt"]
         except Exception:
             raise Exception(u"公众号名称错误或cookie、token错误，请重新输入")
 
@@ -400,9 +403,10 @@ class ArticlesUrls(object):
         """
         self.__verify_str(query, "query")
         try:
-            return self.__get_articles_data(
-                nickname, begin=str(begin), count=str(count),
-                query=query)["app_msg_list"]
+            return self.__get_articles_data(nickname,
+                                            begin=str(begin),
+                                            count=str(count),
+                                            query=query)["app_msg_list"]
         except Exception:
             raise Exception(u"公众号名称错误或cookie、token错误，请重新输入")
 

@@ -6,7 +6,6 @@ class PCUrls(object):
     """
     通过PC端的wechat，获取需要爬取的微信公众号的推文链接
     """
-
     def __init__(self, biz, uin, cookie):
         """
         初始化参数
@@ -25,9 +24,7 @@ class PCUrls(object):
         self.s = requests.session()
         self.__biz = biz
         self.uin = uin
-        self.headers = {
-            'Cookies': cookie
-        }
+        self.headers = {'Cookies': cookie}
 
     def get_urls(self, key, offset='0'):
         """
@@ -89,22 +86,25 @@ class PCUrls(object):
         }
         origin_url = 'https://mp.weixin.qq.com/mp/profile_ext'
 
-        msg_json = self.s.get(origin_url, params=self.params,
+        msg_json = self.s.get(origin_url,
+                              params=self.params,
                               headers=self.headers).json()
         if 'general_msg_list' in msg_json.keys():
-            lst = [item for item in eval(msg_json['general_msg_list'])[
-                'list'] if 'app_msg_ext_info' in item.keys()]
+            lst = [
+                item for item in eval(msg_json['general_msg_list'])['list']
+                if 'app_msg_ext_info' in item.keys()
+            ]
             return lst
 
         raise Exception(
-            'Failure:\n1.params is error, please check your params\n2.key is lose efficacy, please update your key')
+            'Failure:\n1.params is error, please check your params\n2.key is lose efficacy, please update your key'
+        )
 
 
 class MobileUrls(object):
     """
     通过移动端的wechat，获取需要爬取的微信公众号的推文链接
     """
-
     def __init__(self, biz, cookie):
         """
         初始化参数
@@ -121,7 +121,8 @@ class MobileUrls(object):
         self.s = requests.session()
         self.__biz = biz
         self.headers = {
-            'User-Agent': 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0Chrome/57.0.2987.132 MQQBrowser/6.2 Mobile',
+            'User-Agent':
+            'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0Chrome/57.0.2987.132 MQQBrowser/6.2 Mobile',
             'Cookie': cookie
         }
 
@@ -184,12 +185,16 @@ class MobileUrls(object):
         }
         origin_url = 'https://mp.weixin.qq.com/mp/profile_ext'
 
-        msg_json = self.s.get(origin_url, params=self.params,
+        msg_json = self.s.get(origin_url,
+                              params=self.params,
                               headers=self.headers).json()
         if 'general_msg_list' in msg_json.keys():
-            lst = [item for item in eval(msg_json['general_msg_list'])[
-                'list'] if 'app_msg_ext_info' in item.keys()]
+            lst = [
+                item for item in eval(msg_json['general_msg_list'])['list']
+                if 'app_msg_ext_info' in item.keys()
+            ]
             return lst
 
         raise Exception(
-            'Failure:\n1.params is error, please check your params\n2.key is lose efficacy, please update your key')
+            'Failure:\n1.params is error, please check your params\n2.key is lose efficacy, please update your key'
+        )

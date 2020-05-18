@@ -21,8 +21,10 @@ if __name__ == "__main__":
     artiacle_data = test.articles(nickname, begin="0", count="5")
     officical_info = test.official_info(nickname)
 
-    articles_data_query = test.articles(
-        nickname, query=query, begin="0", count="5")
+    articles_data_query = test.articles(nickname,
+                                        query=query,
+                                        begin="0",
+                                        count="5")
     articles_sum_query = test.articles(nickname, query=query)
 
     print("articles_sum:", end=" ")

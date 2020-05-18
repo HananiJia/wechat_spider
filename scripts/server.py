@@ -15,9 +15,11 @@ from flask import Flask, render_template, Response, jsonify
 app = Flask(__name__)
 PORT = 8080
 
+
 @app.route('/')
 def index():
-    return 
+    return
+
 
 if __name__ == '__main__':
     prog = 'python -m articles_server'

@@ -8,7 +8,6 @@ class ArticlesInfo(object):
     """
     登录WeChat，获取更加详细的推文信息。如点赞数、阅读数、评论等
     """
-
     def __init__(self, appmsg_token, cookie):
         """
         初始化参数
@@ -28,13 +27,12 @@ class ArticlesInfo(object):
         self.headers = {
             "User-Agent":
             "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0Chrome/57.0.2987.132 MQQBrowser/6.2 Mobile",
-            "Cookie":
-            cookie
+            "Cookie": cookie
         }
         self.data = {
             "is_only_read": "1",
             "is_temp_url": "0",
-            "appmsg_type": "9", # 新参数，不加入无法获取like_num
+            "appmsg_type": "9",  # 新参数，不加入无法获取like_num
         }
 
     def __verify_url(self, article_url):
@@ -123,7 +121,8 @@ class ArticlesInfo(object):
         __biz, _, idx, _ = self.__get_params(article_url)
         getcomment_url = "https://mp.weixin.qq.com/mp/appmsg_comment?action=getcomment&__biz={}&idx={}&comment_id={}&limit=100"
         try:
-            url = getcomment_url.format(__biz, idx, self.__get_comment_id(article_url))
+            url = getcomment_url.format(__biz, idx,
+                                        self.__get_comment_id(article_url))
             comment_json = self.s.get(url, headers=self.headers).json()
         except Exception as e:
             comment_json = {}
@@ -202,7 +201,8 @@ class ArticlesInfo(object):
 
         # 将params参数换到data中请求。这一步貌似不换也行
         origin_url = "https://mp.weixin.qq.com/mp/getappmsgext?"
-        appmsgext_url = origin_url + "appmsg_token={}&x5=0".format(self.appmsg_token)
+        appmsgext_url = origin_url + "appmsg_token={}&x5=0".format(
+            self.appmsg_token)
         self.data["__biz"] = __biz
         self.data["mid"] = mid
         self.data["sn"] = sn
@@ -210,8 +210,9 @@ class ArticlesInfo(object):
 
         # appmsgext_url = origin_url + "__biz={}&mid={}&sn={}&idx={}&appmsg_token={}&x5=1".format(
         #     __biz, mid, sn, idx, self.appmsg_token)
-        appmsgext_json = requests.post(
-            appmsgext_url, headers=self.headers, data=self.data).json()
+        appmsgext_json = requests.post(appmsgext_url,
+                                       headers=self.headers,
+                                       data=self.data).json()
 
         if "appmsgstat" not in appmsgext_json.keys():
             raise Exception(

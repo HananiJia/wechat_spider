@@ -22,13 +22,14 @@ def timestamp2date(timestamp):
     datetime = time.strftime("%Y-%m-%d %H:%M:%S", time_array)
     return datetime
 
+
 def save_mongo(data,
-                host=None,
-                port=None,
-                name=None,
-                password="",
-                dbname=None,
-                collname=None):
+               host=None,
+               port=None,
+               name=None,
+               password="",
+               dbname=None,
+               collname=None):
     """
     存储数据到mongo
     Parameters
@@ -61,7 +62,7 @@ def save_mongo(data,
     assert isinstance(host, str)
     assert isinstance(name, str)
     assert isinstance(password, str)
-    assert isinstance(dbname, str)        
+    assert isinstance(dbname, str)
     assert isinstance(collname, str)
 
     if not isinstance(port, int):
@@ -74,6 +75,7 @@ def save_mongo(data,
     db_auth.authenticate(name, password)
     coll = client[dbname][collname]
     coll.insert_many(data)
+
 
 def save_json(fname, data):
     """

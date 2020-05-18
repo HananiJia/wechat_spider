@@ -12,6 +12,7 @@ config_path = '/home/hanani/code/personal/wechat_spider/config.json'
 parse_lst = ['article', 'a']
 str_lst = ['hr', 'span', 'ul']
 
+
 def download_img(url, name):
     response = requests.get(url)
     img = response.content
@@ -61,14 +62,15 @@ def parse_section(sections):
 
     return content
 
+
 if __name__ == '__main__':
     url_list = []
-    with open(config_path,"r") as config:
+    with open(config_path, "r") as config:
         config_dict = json.load(config)
         images_path = config_dict['images_path']
         articles_path = config_dict['articles_path']
         url_list = config_dict['url_list']
-    for url_lst in url_list:       
+    for url_lst in url_list:
         for url in url_lst[::-1]:
             html = requests.get(url)
             soup = bs(html.text, 'lxml')
@@ -76,7 +78,8 @@ if __name__ == '__main__':
             body = soup.find(class_="rich_media_area_primary_inner")
             title = body.find(class_="rich_media_title").text.strip()
             author = body.find(
-                class_="rich_media_meta rich_media_meta_nickname").a.text.strip()
+                class_="rich_media_meta rich_media_meta_nickname"
+            ).a.text.strip()
             content_p = body.find(class_="rich_media_content")
             content_lst = content_p.contents
 
@@ -89,7 +92,8 @@ if __name__ == '__main__':
                     section_str = str(item)
                     for img in item.find_all('img'):
                         section_str = section_str.replace(
-                            str(img), '\n\n![img]({})\n\n'.format(img['data-src']))
+                            str(img),
+                            '\n\n![img]({})\n\n'.format(img['data-src']))
                     content += section_str
                 elif item.name in str_lst:
                     content += str(item)
@@ -109,7 +113,7 @@ if __name__ == '__main__':
                     content += '![img]({})\n'.format(url)
                 else:
                     print(item.name)
-            md_path = articles_path.format(f'{title}.md')        
+            md_path = articles_path.format(f'{title}.md')
             with open(md_path, 'w+', encoding='utf-8') as f:
                 f.write('## ' + title + '\n')
                 f.write(author + '\n')
