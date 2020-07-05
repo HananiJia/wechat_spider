@@ -1,6 +1,7 @@
 # coding:  utf-8
 import re
-
+import time
+import json
 import requests
 
 
@@ -68,6 +69,7 @@ class ArticlesInfo(object):
         """
         try:
             appmsgstat = self.__get_appmsgext(article_url)["appmsgstat"]
+            time.sleep(2)
             return appmsgstat["read_num"], appmsgstat["like_num"]
         except Exception:
             raise Exception("params is error, please check your article_url")
@@ -124,6 +126,7 @@ class ArticlesInfo(object):
             url = getcomment_url.format(__biz, idx,
                                         self.__get_comment_id(article_url))
             comment_json = self.s.get(url, headers=self.headers).json()
+            time.sleep(1)
         except Exception as e:
             comment_json = {}
         return comment_json
@@ -198,7 +201,6 @@ class ArticlesInfo(object):
             }
         """
         __biz, mid, idx, sn = self.__get_params(article_url)
-
         # 将params参数换到data中请求。这一步貌似不换也行
         origin_url = "https://mp.weixin.qq.com/mp/getappmsgext?"
         appmsgext_url = origin_url + "appmsg_token={}&x5=0".format(
@@ -213,7 +215,6 @@ class ArticlesInfo(object):
         appmsgext_json = requests.post(appmsgext_url,
                                        headers=self.headers,
                                        data=self.data).json()
-
         if "appmsgstat" not in appmsgext_json.keys():
             raise Exception(
                 "get info error, please check your cookie and appmsg_token")

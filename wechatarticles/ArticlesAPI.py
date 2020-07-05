@@ -3,6 +3,7 @@
 from .ArticlesUrls import ArticlesUrls
 from .ArticlesInfo import ArticlesInfo
 import time
+import datetime
 import requests
 import codecs, markdown
 from tqdm import tqdm
@@ -279,9 +280,13 @@ class ArticlesAPI(object):
         for data in articles_data:
             article_url = data["link"]
             comments = self.wechat.comments(article_url)
-            #read_like_nums = self.wechat.read_like_nums(article_url)
+            read_like_nums = self.wechat.read_like_nums(article_url)
             data["comments"] = comments
-            data["read_num"], data["like_num"] = 0, 0
+            timeStamp = data['create_time']
+            timeArray = time.localtime(timeStamp)
+            otherStyleTime = time.strftime("%Y--%m--%d %H:%M:%S", timeArray)
+            data['create_time'] = otherStyleTime
+            data["read_num"], data["like_num"] = read_like_nums[0], read_like_nums[1]
 
         return articles_data
 
@@ -373,14 +378,32 @@ class ArticlesAPI(object):
             print(f'本次抓取{len(artiacle_data)}篇数据')
             index = 0
             artiacle_datas.extend(artiacle_data)
+            timet= 0
             for artiacle in artiacle_data:
                 if start + index >= articles_nums:
                     print("已抓取到对应数据数据:",articles_nums)
                     break
                 print(f'正在抓取第{start+index}篇文章数据')
+                timeStamp = artiacle['create_time']
+                timet = timeStamp
+                # if int(timeStamp) < 1575129600:
+                #     print("时间达到范围已经终止")
+                #     break
+                timeArray = time.localtime(timeStamp)
+                otherStyleTime = time.strftime("%Y--%m--%d %H:%M:%S", timeArray)
+                print('文章发布于:',otherStyleTime)
                 index += 1
                 if not artiacle:
                     print("article is None")
+                article_url = artiacle["link"]
+                comments = self.wechat.comments(article_url)
+                read_like_nums = self.wechat.read_like_nums(article_url)
+                artiacle["comments"] = comments
+                timeStamp = artiacle['create_time']
+                timeArray = time.localtime(timeStamp)
+                otherStyleTime = time.strftime("%Y--%m--%d %H:%M:%S", timeArray)
+                artiacle['create_time'] = otherStyleTime
+                artiacle["read_num"], artiacle["like_num"] = read_like_nums[0], read_like_nums[1]   
                 print(json.dumps(artiacle,indent=4,ensure_ascii=False))
                 time.sleep(gap_time)
                 url_lst = [artiacle['link']]
@@ -389,9 +412,12 @@ class ArticlesAPI(object):
                 del artiacle['_id'] 
             begin += count
             start += len(artiacle_data)
+            # if int(timet) < 1575129600:
+            #     print('时间达到已经终止')
+            #     break
             if start >= articles_nums:
                 break
 
         flatten = lambda x: [y for l in x
                              for y in flatten(l)] if type(x) is list else [x]
-        return self.__extract_info(flatten(artiacle_datas))
+        return artiacle_datas

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            * {
+                font-family: monospace;
+            }
+            h1 {
+                font-size: 64px;
+                padding: 2em;
+            }
+            a {
+                padding: 2em;
+                font-size: 48px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1 style="font-size: 50px;">西安工业大学高校信息服务平台</h1>
+            <img src = 'http://img1.imgtn.bdimg.com/it/u=2706079983,4264408994&fm=26&gp=0.jpg' style="height:100%;width: 100%;border: 0;">
+        </div>
+    <script src="res/dat.gui.min.js"></script>
+    <script src="res/jquery.min.js"></script>  
+    <script type="text/javascript" charset="utf-8">
+        var Config = function () {
+            _this = this;
+            _this.show_properties = true;
+            _this.font_size = 20;
+            _this.articles = "None";
+            return _this;
+        };
+        var config = new Config();
+        var gui = new dat.GUI({
+            width:400
+        });
+        gui.add(config, "show_properties").name("show properties").onChange(show => {
+            if (show){
+                document.getElementById('console').style.display="block";
+            }else{
+                document.getElementById('console').style.display="none";
+            }
+        });
+        var query_object = new Object()
+        var queryRequest = new XMLHttpRequest();
+        queryRequest.open('GET','/json_object/query',true)
+        queryRequest.send();
+        queryRequest.onreadystatechange = function () {
+            if (queryRequest.readyState == 4 && queryRequest.status == 200) {
+                query_object = JSON.parse(queryRequest.responseText);
+                console.log(query_object)
+                for (var key in query_object) {
+                    gui.articles = gui.addFolder(key);
+                    console.log(key);     //获取key值
+                    console.log(query_object[key]); //获取对应的value值
+                    gui.articles.add(config,"articles",query_object[key]).name("articles").onChange(value =>{
+                    var url = '/articles/' + value
+                    changeArticles(url)
+                    window.location.reload()
+                })
+                }
+            }
+        };
+        function changeArticles(url){
+            var artRequest = new XMLHttpRequest();
+            artRequest.open('GET',url,true);
+            artRequest.send();
+            artRequest.onreadystatechange = function () {
+                if (artRequest.readyState == 4 && artRequest.status == 200) {
+                        response = artRequest.responseText;
+                        console.log('response:',response);
+                    }
+            }
+        };
+    </script>    
+    </body>
+</html>

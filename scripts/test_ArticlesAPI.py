@@ -50,7 +50,7 @@ if __name__ == '__main__':
         os.makedirs(html_path)
     article_nums = config_dict['article_nums']    
     data = test.continue_info(nickname=nickname,
-                              begin=0,
+                              begin=320,
                               md_path=markdown_path,
                               html_path=html_path,
                               gap_time=gap_time,
