@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            * {
+                font-family: monospace;
+            }
+            h1 {
+                font-size: 64px;
+                padding: 2em;
+            }
+            a {
+                padding: 2em;
+                font-size: 48px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>西安工业大学高校信息服务平台</h1>
+        <div class="links">
+            <a target="_blank" ></a>
+            <a target="_blank" ></a>
+            <a target="_blank"></a>
+        </div>
+    <script src="res/dat.gui.min.js"></script>
+    <script src="res/jquery.min.js"></script>  
+    <script type="text/javascript" charset="utf-8">
+        var Config = function () {
+            _this = this;
+            _this.font_size = 20;
+            return _this;
+        };
+        var config = new Config();
+        var gui = new dat.GUI({
+            width: 800
+        });
+        gui.add(config, "show_properties").name("show properties").onChange(show => {
+            if (show){
+                document.getElementById('console').style.display="block";
+            }else{
+                document.getElementById('console').style.display="none";
+            }
+        });
+        gui.svg = gui.addFolder('svg filter');
+    </script>    
+    </body>
+</html>
